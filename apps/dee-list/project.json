@@ -56,6 +56,10 @@
         "development": {
           "buildTarget": "dee-list:build:development"
         }
+      },
+      "dependsOn": ["dee-list-api:serve"],
+      "options": {
+        "proxyConfig": "apps/dee-list/proxy.conf.json"
       }
     },
     "lint": {
