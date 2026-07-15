@@ -36,14 +36,19 @@
     "copy-workspace-modules": {
       "dependsOn": ["build"],
       "cache": true,
-      "outputs": ["{workspaceRoot}/dist/apps/dee-list-api/workspace_modules"],
+      "outputs": [
+        "{workspaceRoot}/dist/apps/dee-list-api/workspace_modules"
+      ],
       "executor": "@nx/js:copy-workspace-modules",
       "options": {
         "buildTarget": "build"
       }
     },
     "prune": {
-      "dependsOn": ["prune-lockfile", "copy-workspace-modules"],
+      "dependsOn": [
+        "prune-lockfile",
+        "copy-workspace-modules"
+      ],
       "executor": "nx:noop"
     },
     "serve": {
@@ -62,6 +67,24 @@
         "production": {
           "buildTarget": "dee-list-api:build:production"
         }
+      }
+    },
+    "typeorm:generate": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "ts-node --project apps/dee-list-api/tsconfig.app.json ./node_modules/typeorm/cli.js migration:generate apps/dee-list-api/src/app/migrations/$npm_config_name -d apps/dee-list-api/src/app/database/data-source.ts"
+      }
+    },
+    "typeorm:run": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "ts-node --project apps/dee-list-api/tsconfig.app.json ./node_modules/typeorm/cli.js migration:run -d apps/dee-list-api/src/app/database/data-source.ts"
+      }
+    },
+    "typeorm:revert": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "ts-node --project apps/dee-list-api/tsconfig.app.json ./node_modules/typeorm/cli.js migration:revert -d apps/dee-list-api/src/app/database/data-source.ts"
       }
     }
   },
