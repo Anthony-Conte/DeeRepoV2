@@ -1,26 +1,44 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+
 import { CreateItemDto } from './dto/create-item.dto';
 import { UpdateItemDto } from './dto/update-item.dto';
+import { Item } from './entities/item.entity';
 
 @Injectable()
 export class ItemService {
-  create(createItemDto: CreateItemDto) {
-    return 'This action adds a new item';
+  constructor(
+    @InjectRepository(Item)
+    private readonly itemRepository: Repository<Item>,
+  ) {}
+
+  async create(createItemDto: CreateItemDto): Promise<Item> {
+    const item = this.itemRepository.create({
+      ...createItemDto,
+      createdByUserId: '550e8400-e29b-41d4-a716-446655440000', // Replace with actual user ID in a real application
+    });
+
+    return this.itemRepository.save(item);
   }
 
-  findAll() {
-    return `This action returns all item`;
+  async findAll(): Promise<Item[]> {
+    return this.itemRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} item`;
+  async findOne(id: string): Promise<Item | null> {
+    return this.itemRepository.findOne({
+      where: { id },
+    });
   }
 
-  update(id: number, updateItemDto: UpdateItemDto) {
-    return `This action updates a #${id} item`;
+  async update(id: string, updateItemDto: UpdateItemDto): Promise<Item | null> {
+    await this.itemRepository.update(id, updateItemDto);
+
+    return this.findOne(id);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} item`;
+  async remove(id: string): Promise<void> {
+    await this.itemRepository.delete(id);
   }
 }
