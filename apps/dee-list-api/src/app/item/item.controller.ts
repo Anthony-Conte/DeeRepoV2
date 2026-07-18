@@ -10,14 +10,14 @@ import {
 
 import { ItemService } from './item.service';
 import { UpdateItemDto } from './dto/update-item.dto';
-import { CreateItemDto } from '@org/models';
+import { CreateItemRequest } from './dto/create-item.dto';
 
 @Controller('items')
 export class ItemController {
   constructor(private readonly itemService: ItemService) {}
 
   @Post()
-  create(@Body() createItemDto: CreateItemDto) {
+  create(@Body() createItemDto: CreateItemRequest) {
     return this.itemService.create(createItemDto);
   }
 

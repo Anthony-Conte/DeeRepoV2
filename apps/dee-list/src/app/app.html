@@ -1,2 +1,6 @@
-<app-nx-welcome></app-nx-welcome>
+<h1>hello</h1>
+@for(item of items; track item.id) {
+  <div>{{ item.name }}</div>
+}
+
 <router-outlet></router-outlet>
