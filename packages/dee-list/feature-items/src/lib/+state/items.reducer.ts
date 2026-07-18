@@ -60,6 +60,18 @@ const reducer = createReducer(
   })),
   on(ItemsActions.removeItemSuccess, (state, { itemId }) =>
     itemsAdapter.removeOne(itemId, state)
+  ),
+  on(ItemsActions.updateItem, (state) => ({
+    ...state,
+    loaded: false,
+    error: null
+  })),
+  on(ItemsActions.updateItemFailure, (state, { error }) => ({
+    ...state,
+    error
+  })),
+  on(ItemsActions.updateItemSuccess, (state, { item }) =>
+    itemsAdapter.updateOne({ id: item.id, changes: item }, state)
   )
 );
 

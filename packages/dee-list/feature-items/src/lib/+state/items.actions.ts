@@ -45,3 +45,18 @@ export const removeItemFailure = createAction(
   '[Items/API] Remove Item Failure',
   props<{ error: any }>()
 );
+
+export const updateItem = createAction(
+  '[Items Page] Update Item',
+  props<{ itemId: string; item: CreateItemDto }>()
+);
+
+export const updateItemSuccess = createAction(
+  '[Items/API] Update Item Success',
+  props<{ item: Item }>()
+);
+
+export const updateItemFailure = createAction(
+  '[Items/API] Update Item Failure',
+  props<{ error: any }>()
+);

@@ -2,10 +2,12 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  PrimaryGeneratedColumn,
+  PrimaryGeneratedColumn
 } from 'typeorm';
+import { Item as ItemInterface } from '@org/models';
+
 @Entity({ name: 'items' })
-export class Item {
+export class Item implements ItemInterface {
   @PrimaryGeneratedColumn('uuid')
   public id!: string;
 
@@ -17,4 +19,7 @@ export class Item {
 
   @CreateDateColumn({ name: 'created_at' })
   public createdAt!: Date;
+
+  @Column({ type: 'boolean', default: false })
+  public selected!: boolean;
 }

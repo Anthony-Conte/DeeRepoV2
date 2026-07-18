@@ -1,7 +1,10 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { ItemsFacade } from '../+state/items.facade';
 import { AsyncPipe } from '@angular/common';
-import { CreateItemDto } from 'packages/shared/models/src/lib/dee-list/item.model';
+import {
+  CreateItemDto,
+  Item
+} from 'packages/shared/models/src/lib/dee-list/item.model';
 
 @Component({
   selector: 'lib-feature-items',
@@ -18,12 +21,17 @@ export class FeatureItemsComponent implements OnInit {
 
   public addItem(): void {
     const newItem: CreateItemDto = {
-      name: 'New Item'
+      name: 'New Item',
+      selected: true
     };
     this.itemsFacade.addItem(newItem);
   }
 
   public removeItem(itemId: string): void {
     this.itemsFacade.removeItem(itemId);
+  }
+
+  public updateItemSelected(item: Item, selected: boolean): void {
+    this.itemsFacade.updateItemSelected(item, selected);
   }
 }

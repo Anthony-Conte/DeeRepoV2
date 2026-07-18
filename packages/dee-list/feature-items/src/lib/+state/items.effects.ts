@@ -58,4 +58,23 @@ export class ItemsEffects {
       )
     )
   );
+
+  updateItem$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(ItemsActions.updateItem),
+      switchMap(({ itemId, item }) =>
+        this.httpClient
+          .patch<Item>(`http://localhost:3000/api/items/${itemId}`, item)
+          .pipe(
+            map((updatedItem) =>
+              ItemsActions.updateItemSuccess({ item: updatedItem })
+            ),
+            catchError((error) => {
+              console.error('Error', error);
+              return of(ItemsActions.updateItemFailure({ error }));
+            })
+          )
+      )
+    )
+  );
 }

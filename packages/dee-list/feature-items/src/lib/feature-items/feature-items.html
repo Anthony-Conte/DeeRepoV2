@@ -1,6 +1,7 @@
 <p>FeatureItems works with lazy loading routes</p>
 <button (click)="addItem()">Add Item</button>
 @for (item of itemsFacade.items$ | async; track item.id) {
-  <p >{{item.name}} - {{item.id}}</p>
+  <p >{{item.name}} - Selected: {{item.selected}}</p>
   <button (click)="removeItem(item.id)">Remove</button> 
+  <button (click)="updateItemSelected(item, !item.selected)">Toggle Selected</button>
 }
