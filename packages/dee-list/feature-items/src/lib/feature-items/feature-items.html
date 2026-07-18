@@ -1,1 +1,4 @@
 <p>FeatureItems works with lazy loading routes</p>
+@for (item of itemsFacade.items$ | async; track item.id) {
+  <p>{{item.name}}</p>
+}
