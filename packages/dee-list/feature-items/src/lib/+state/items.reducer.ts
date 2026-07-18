@@ -20,7 +20,7 @@ export const itemsAdapter: EntityAdapter<Item> = createEntityAdapter<Item>();
 
 export const initialItemsState: ItemsState = itemsAdapter.getInitialState({
   // set initial required properties
-  loaded: false,
+  loaded: false
 });
 
 const reducer = createReducer(
@@ -28,15 +28,39 @@ const reducer = createReducer(
   on(ItemsActions.initItems, (state) => ({
     ...state,
     loaded: false,
-    error: null,
+    error: null
   })),
   on(ItemsActions.loadItemsSuccess, (state, { items }) =>
-    itemsAdapter.setAll(items, { ...state, loaded: true }),
+    itemsAdapter.setAll(items, { ...state, loaded: true })
   ),
   on(ItemsActions.loadItemsFailure, (state, { error }) => ({
     ...state,
-    error,
+    error
   })),
+  on(ItemsActions.addItem, (state) => ({
+    ...state,
+    loaded: false,
+    error: null
+  })),
+  on(ItemsActions.addItemFailure, (state, { error }) => ({
+    ...state,
+    error
+  })),
+  on(ItemsActions.addItemSuccess, (state, { item }) =>
+    itemsAdapter.addOne(item, state)
+  ),
+  on(ItemsActions.removeItem, (state) => ({
+    ...state,
+    loaded: false,
+    error: null
+  })),
+  on(ItemsActions.removeItemFailure, (state, { error }) => ({
+    ...state,
+    error
+  })),
+  on(ItemsActions.removeItemSuccess, (state, { itemId }) =>
+    itemsAdapter.removeOne(itemId, state)
+  )
 );
 
 export function itemsReducer(state: ItemsState | undefined, action: Action) {
