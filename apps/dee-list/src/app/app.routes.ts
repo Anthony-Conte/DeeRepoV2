@@ -8,7 +8,7 @@ export const appRoutes: Route[] = [
   },
   {
     path: 'items',
-    loadComponent: () =>
-      import('@org/feature-items').then((m) => m.FeatureItems),
+    loadChildren: () =>
+      import('@org/feature-items').then((m) => m.FEATURE_ITEMS_ROUTES),
   },
 ];
