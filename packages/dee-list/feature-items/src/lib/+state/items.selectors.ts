@@ -9,31 +9,41 @@ const { selectAll, selectEntities } = itemsAdapter.getSelectors();
 
 export const selectItemsLoaded = createSelector(
   selectItemsState,
-  (state: ItemsState) => state.loaded,
+  (state: ItemsState) => state.loaded
+);
+
+export const selectSelectedItems = createSelector(
+  selectItemsState,
+  (state: ItemsState) => state.selectedItems
+);
+
+export const selectUnselectedItems = createSelector(
+  selectItemsState,
+  (state: ItemsState) => state.unselectedItems
 );
 
 export const selectItemsError = createSelector(
   selectItemsState,
-  (state: ItemsState) => state.error,
+  (state: ItemsState) => state.error
 );
 
 export const selectAllItems = createSelector(
   selectItemsState,
-  (state: ItemsState) => selectAll(state),
+  (state: ItemsState) => selectAll(state)
 );
 
 export const selectItemsEntities = createSelector(
   selectItemsState,
-  (state: ItemsState) => selectEntities(state),
+  (state: ItemsState) => selectEntities(state)
 );
 
 export const selectSelectedId = createSelector(
   selectItemsState,
-  (state: ItemsState) => state.selectedId,
+  (state: ItemsState) => state.selectedId
 );
 
 export const selectEntity = createSelector(
   selectItemsEntities,
   selectSelectedId,
-  (entities, selectedId) => (selectedId ? entities[selectedId] : undefined),
+  (entities, selectedId) => (selectedId ? entities[selectedId] : undefined)
 );

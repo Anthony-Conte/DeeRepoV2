@@ -10,6 +10,8 @@ export interface ItemsState extends EntityState<Item> {
   selectedId?: string | number; // which Items record has been selected
   loaded: boolean; // has the Items list been loaded
   error?: string | null; // last known error (if any)
+  selectedItems: Item[]; // array of selected items
+  unselectedItems: Item[]; // array of unselected items
 }
 
 export interface ItemsPartialState {
@@ -20,7 +22,10 @@ export const itemsAdapter: EntityAdapter<Item> = createEntityAdapter<Item>();
 
 export const initialItemsState: ItemsState = itemsAdapter.getInitialState({
   // set initial required properties
-  loaded: false
+  loaded: false,
+  selectedItems: [],
+  unselectedItems: [],
+  error: null
 });
 
 const reducer = createReducer(
@@ -31,7 +36,12 @@ const reducer = createReducer(
     error: null
   })),
   on(ItemsActions.loadItemsSuccess, (state, { items }) =>
-    itemsAdapter.setAll(items, { ...state, loaded: true })
+    itemsAdapter.setAll(items, {
+      ...state,
+      loaded: true,
+      selectedItems: items.filter((item) => item.selected),
+      unselectedItems: items.filter((item) => !item.selected)
+    })
   ),
   on(ItemsActions.loadItemsFailure, (state, { error }) => ({
     ...state,
@@ -47,7 +57,16 @@ const reducer = createReducer(
     error
   })),
   on(ItemsActions.addItemSuccess, (state, { item }) =>
-    itemsAdapter.addOne(item, state)
+    itemsAdapter.addOne(item, {
+      ...state,
+      loaded: true,
+      selectedItems: item.selected
+        ? [...state.selectedItems, item]
+        : state.selectedItems,
+      unselectedItems: !item.selected
+        ? [...state.unselectedItems, item]
+        : state.unselectedItems
+    })
   ),
   on(ItemsActions.removeItem, (state) => ({
     ...state,
@@ -59,7 +78,14 @@ const reducer = createReducer(
     error
   })),
   on(ItemsActions.removeItemSuccess, (state, { itemId }) =>
-    itemsAdapter.removeOne(itemId, state)
+    itemsAdapter.removeOne(itemId, {
+      ...state,
+      loaded: true,
+      selectedItems: state.selectedItems.filter((item) => item.id !== itemId),
+      unselectedItems: state.unselectedItems.filter(
+        (item) => item.id !== itemId
+      )
+    })
   ),
   on(ItemsActions.updateItem, (state) => ({
     ...state,
@@ -71,7 +97,19 @@ const reducer = createReducer(
     error
   })),
   on(ItemsActions.updateItemSuccess, (state, { item }) =>
-    itemsAdapter.updateOne({ id: item.id, changes: item }, state)
+    itemsAdapter.updateOne(
+      { id: item.id, changes: item },
+      {
+        ...state,
+        loaded: true,
+        selectedItems: item.selected
+          ? [...state.selectedItems.filter((i) => i.id !== item.id), item]
+          : state.selectedItems.filter((i) => i.id !== item.id),
+        unselectedItems: !item.selected
+          ? [...state.unselectedItems.filter((i) => i.id !== item.id), item]
+          : state.unselectedItems.filter((i) => i.id !== item.id)
+      }
+    )
   )
 );
 

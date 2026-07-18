@@ -1,7 +1,11 @@
 import { Injectable, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { addItem, initItems, removeItem, updateItem } from './items.actions';
-import { selectAllItems } from './items.selectors';
+import {
+  selectAllItems,
+  selectSelectedItems,
+  selectUnselectedItems
+} from './items.selectors';
 import { CreateItemDto, Item } from '@org/models';
 
 @Injectable({
@@ -11,6 +15,8 @@ export class ItemsFacade {
   private store = inject(Store);
 
   public items$ = this.store.select(selectAllItems);
+  public selectedItems$ = this.store.select(selectSelectedItems);
+  public unselectedItems$ = this.store.select(selectUnselectedItems);
 
   public initItems(): void {
     this.store.dispatch(initItems());
