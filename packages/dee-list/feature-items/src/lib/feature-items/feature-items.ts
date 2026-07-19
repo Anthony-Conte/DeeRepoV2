@@ -5,7 +5,7 @@ import {
   CreateItemDto,
   Item
 } from 'packages/shared/models/src/lib/dee-list/item.model';
-import { DeeButton } from 'packages/shared/ui/src/lib/shared-ui/dee-button';
+import { DeeButton } from '@org/shared-ui';
 @Component({
   selector: 'lib-feature-items',
   imports: [AsyncPipe, DeeButton],
