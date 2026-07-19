@@ -1,0 +1,20 @@
+@import './../../variables.css';
+
+button {
+    background-color: var(--dee-color-primary);
+    color: var(--dee-color-on-primary);
+    border: none;
+    padding: var(--dee-space-sm) var(--dee-space-md);
+    border-radius: var(--dee-radius-md);
+    font-family: var(--dee-font-family);
+    font-size: var(--dee-font-size-md);
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: var(--dee-color-primary-hover);
+}
+
+button:active {
+    background-color: var(--dee-color-primary-active);
+}

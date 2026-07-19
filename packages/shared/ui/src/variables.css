@@ -1,0 +1,44 @@
+:root {
+  /* Spacing */
+  --dee-space-xs: 0.25rem;
+  --dee-space-sm: 0.5rem;
+  --dee-space-md: 1rem;
+  --dee-space-lg: 1.5rem;
+  --dee-space-xl: 2rem;
+
+  /* Typography */
+  --dee-font-family: 'Inter', sans-serif;
+
+  --dee-font-size-sm: 0.875rem;
+  --dee-font-size-md: 1rem;
+  --dee-font-size-lg: 1.25rem;
+  --dee-font-size-xl: 1.5rem;
+
+  /* Border Radius */
+  --dee-radius-sm: 4px;
+  --dee-radius-md: 8px;
+  --dee-radius-lg: 12px;
+
+  /* Elevation (Shadow) */
+  --dee-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --dee-shadow-md: 0 2px 6px rgba(0, 0, 0, 0.1);
+  --dee-shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+  /* Colors */
+  --dee-color-primary: #5077c6;
+  --dee-color-primary-hover: #3f64b1;
+  --dee-color-primary-active: #2e539c;
+  --dee-color-primary-light: #8ca9e2;
+  --dee-color-on-primary: #ffffff;
+
+  --dee-color-gray-100: #f7f9fc;
+  --dee-color-gray-300: #dce1e8;
+  --dee-color-gray-700: #495057;
+  --dee-color-black: #121212;
+
+  --dee-color-error: #dc3545;
+
+  /* Breakpoints */
+  --dee-medium-screen: 900px;
+  --dee-mobile-screen: 768px;
+}

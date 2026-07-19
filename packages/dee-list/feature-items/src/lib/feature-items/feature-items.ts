@@ -5,10 +5,10 @@ import {
   CreateItemDto,
   Item
 } from 'packages/shared/models/src/lib/dee-list/item.model';
-
+import { DeeButton } from 'packages/shared/ui/src/lib/shared-ui/dee-button';
 @Component({
   selector: 'lib-feature-items',
-  imports: [AsyncPipe],
+  imports: [AsyncPipe, DeeButton],
   templateUrl: './feature-items.html',
   styleUrl: './feature-items.css'
 })
