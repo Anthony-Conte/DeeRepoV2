@@ -68,7 +68,7 @@
     "typeorm:generate": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "ts-node --project apps/auth-api/tsconfig.app.json ./node_modules/typeorm/cli.js migration:generate apps/auth-api/src/app/migrations/$npm_config_name -d apps/auth-api/src/app/database/data-source.ts"
+        "command": "ts-node --project apps/auth-api/tsconfig.app.json ./node_modules/typeorm/cli.js migration:generate apps/auth-api/src/app/migrations/auth-migration -d apps/auth-api/src/app/database/data-source.ts"
       }
     },
     "typeorm:run": {
