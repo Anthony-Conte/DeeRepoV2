@@ -38,6 +38,8 @@
           >{{selectedItem.name}}</lib-dee-button
         >
       </div>
+      } @if (!(itemsFacade.selectedItems$ | async)?.length) {
+      <h2>-- Empty --</h2>
       }
     </div>
     <h1>Unselected Items</h1>
@@ -57,6 +59,8 @@
           >{{unselectedItem.name}}</lib-dee-button
         >
       </div>
+      } @if (!(itemsFacade.unselectedItems$ | async)?.length) {
+      <h2>-- Empty --</h2>
       }
     </div>
   </lib-dee-tile>
