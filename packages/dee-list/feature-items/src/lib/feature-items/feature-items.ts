@@ -6,17 +6,22 @@ import {
   Item
 } from 'packages/shared/models/src/lib/dee-list/item.model';
 import { DeeButton, DeeInput, DeeTile } from '@org/shared-ui';
-import { FormsModule } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 @Component({
   selector: 'lib-feature-items',
-  imports: [AsyncPipe, DeeButton, DeeInput, DeeTile, FormsModule],
+  imports: [AsyncPipe, DeeButton, DeeInput, DeeTile, ReactiveFormsModule],
   templateUrl: './feature-items.html',
   styleUrl: './feature-items.css'
 })
 export class FeatureItemsComponent implements OnInit {
-  public newItemName = '';
-  public itemsFacade = inject(ItemsFacade);
   public showRemoveView = false;
+
+  public itemsFacade = inject(ItemsFacade);
+  private readonly fb = inject(FormBuilder);
+
+  readonly itemForm = this.fb.nonNullable.group({
+    itemName: ['', [Validators.required]]
+  });
 
   public ngOnInit(): void {
     this.itemsFacade.initItems();
@@ -24,11 +29,11 @@ export class FeatureItemsComponent implements OnInit {
 
   public addItem(): void {
     const newItem: CreateItemDto = {
-      name: this.newItemName,
+      name: this.itemForm.get('itemName')?.value || '',
       selected: true
     };
     this.itemsFacade.addItem(newItem);
-    this.newItemName = '';
+    this.itemForm.reset();
   }
 
   public removeItem(itemId: string): void {

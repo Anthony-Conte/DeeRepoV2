@@ -3,10 +3,13 @@
     <div class="item-row">
       <div>
         <div class="input-container">
-          <lib-dee-input
-            placeholder="Item name"
-            [(ngModel)]="newItemName"
-          ></lib-dee-input>
+          <form [formGroup]="itemForm">
+            <lib-dee-input
+              placeholder="Item name"
+              formControlName="itemName"
+              name="itemName"
+            ></lib-dee-input>
+          </form>
           <lib-dee-button (click)="addItem()">+</lib-dee-button>
         </div>
       </div>
