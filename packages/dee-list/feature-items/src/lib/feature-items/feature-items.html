@@ -1,4 +1,9 @@
 <div class="item-list">
+  <lib-dee-input
+    label="Item Name"
+    placeholder="Enter item name"
+    [(ngModel)]="newItemName"
+  ></lib-dee-input>
   <lib-dee-button (click)="addItem()">Add Item</lib-dee-button>
 
   <h1>Selected Items</h1>

@@ -5,14 +5,16 @@ import {
   CreateItemDto,
   Item
 } from 'packages/shared/models/src/lib/dee-list/item.model';
-import { DeeButton } from '@org/shared-ui';
+import { DeeButton, DeeInput } from '@org/shared-ui';
+import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'lib-feature-items',
-  imports: [AsyncPipe, DeeButton],
+  imports: [AsyncPipe, DeeButton, DeeInput, FormsModule],
   templateUrl: './feature-items.html',
   styleUrl: './feature-items.css'
 })
 export class FeatureItemsComponent implements OnInit {
+  public newItemName = '';
   public itemsFacade = inject(ItemsFacade);
 
   public ngOnInit(): void {
@@ -21,10 +23,11 @@ export class FeatureItemsComponent implements OnInit {
 
   public addItem(): void {
     const newItem: CreateItemDto = {
-      name: 'New Item',
+      name: this.newItemName,
       selected: true
     };
     this.itemsFacade.addItem(newItem);
+    this.newItemName = '';
   }
 
   public removeItem(itemId: string): void {

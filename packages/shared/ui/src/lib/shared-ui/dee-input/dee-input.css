@@ -1,0 +1,11 @@
+input {
+  padding: var(--dee-space-sm) var(--dee-space-md);
+  border: 1px solid var(--dee-color-gray-300);
+  border-radius: var(--dee-radius-md);
+  font-family: var(--dee-font-family);
+  font-size: var(--dee-font-size-md);
+}
+
+input:focus {
+  outline: 2px solid var(--dee-color-primary-light);
+}
