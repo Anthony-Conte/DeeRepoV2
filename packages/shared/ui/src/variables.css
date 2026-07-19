@@ -37,6 +37,8 @@
   --dee-color-black: #121212;
 
   --dee-color-error: #dc3545;
+  --dee-color-error-hover: #c82333;
+  --dee-color-error-active: #bd2130;
 
   /* Breakpoints */
   --dee-medium-screen: 900px;

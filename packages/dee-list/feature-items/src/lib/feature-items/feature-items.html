@@ -16,7 +16,9 @@
           <lib-dee-button (click)="addItem()">+</lib-dee-button>
         </div>
       </div>
-      <lib-dee-button (click)="toggleRemoveView()">Remove items</lib-dee-button>
+      <lib-dee-button (click)="toggleRemoveView()" [variant]="'error'"
+        >Remove items</lib-dee-button
+      >
     </div>
     <h1>Selected Items</h1>
 
@@ -25,7 +27,11 @@
       selectedItem.id) {
       <div class="item-row">
         @if(showRemoveView) {
-        <lib-dee-button (click)="removeItem(selectedItem.id)">-</lib-dee-button>
+        <lib-dee-button
+          (click)="removeItem(selectedItem.id)"
+          [variant]="'error'"
+          >-</lib-dee-button
+        >
         }
         <lib-dee-button
           (click)="updateItemSelected(selectedItem, !selectedItem.selected)"
@@ -40,7 +46,9 @@
       unselectedItem.id) {
       <div class="item-row">
         @if(showRemoveView) {
-        <lib-dee-button (click)="removeItem(unselectedItem.id)"
+        <lib-dee-button
+          (click)="removeItem(unselectedItem.id)"
+          [variant]="'error'"
           >-</lib-dee-button
         >
         }
