@@ -1,0 +1,13 @@
+<div class="card">
+  @if (header) {
+  <div class="card__header">{{ header }}</div>
+  }
+
+  <div class="card__body">
+    <ng-content></ng-content>
+  </div>
+
+  @if (footer) {
+  <div class="card__footer">{{ footer }}</div>
+  }
+</div>

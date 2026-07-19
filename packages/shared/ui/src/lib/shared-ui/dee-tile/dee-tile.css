@@ -1,0 +1,28 @@
+.card {
+  background-color: white;
+  border-radius: var(--dee-radius-lg);
+  padding: var(--dee-space-lg);
+  box-shadow: var(--dee-shadow-md);
+  font-family: var(--dee-font-family);
+  color: var(--dee-color-gray-700);
+  display: flex;
+  flex-direction: column;
+  gap: var(--dee-space-md);
+}
+
+.card__header {
+  font-size: var(--dee-font-size-lg);
+  font-weight: bold;
+  color: var(--dee-color-black);
+}
+
+.card__body {
+  font-size: var(--dee-font-size-md);
+}
+
+.card__footer {
+  font-size: var(--dee-font-size-sm);
+  color: var(--dee-color-gray-700);
+  border-top: 1px solid var(--dee-color-gray-300);
+  padding-top: var(--dee-space-sm);
+}

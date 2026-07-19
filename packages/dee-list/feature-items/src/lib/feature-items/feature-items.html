@@ -1,26 +1,39 @@
-<div class="item-list">
-  <div class="input-container">
-    <lib-dee-input
-      placeholder="Item name"
-      [(ngModel)]="newItemName"
-    ></lib-dee-input>
-    <lib-dee-button (click)="addItem()">+</lib-dee-button>
-  </div>
-  <h1>Selected Items</h1>
+<lib-dee-tile [title]="'Feature Items'">
+  <div class="item-list">
+    <div class="input-container">
+      <lib-dee-input
+        placeholder="Item name"
+        [(ngModel)]="newItemName"
+      ></lib-dee-input>
+      <lib-dee-button (click)="addItem()">+</lib-dee-button>
+    </div>
+    <lib-dee-button (click)="toggleRemoveView()">Remove items</lib-dee-button>
+    <h1>Selected Items</h1>
 
-  @for (selectedItem of itemsFacade.selectedItems$ | async; track
-  selectedItem.id) {
-  <lib-dee-button
-    (click)="updateItemSelected(selectedItem, !selectedItem.selected)"
-    >{{selectedItem.name}}</lib-dee-button
-  >
-  }
-  <h1>Unselected Items</h1>
-  @for (unselectedItem of itemsFacade.unselectedItems$ | async; track
-  unselectedItem.id) {
-  <lib-dee-button
-    (click)="updateItemSelected(unselectedItem, !unselectedItem.selected)"
-    >{{unselectedItem.name}}</lib-dee-button
-  >
-  }
-</div>
+    @for (selectedItem of itemsFacade.selectedItems$ | async; track
+    selectedItem.id) {
+    <div class="item-row">
+      @if(showRemoveView) {
+      <lib-dee-button (click)="removeItem(selectedItem.id)">-</lib-dee-button>
+      }
+      <lib-dee-button
+        (click)="updateItemSelected(selectedItem, !selectedItem.selected)"
+        >{{selectedItem.name}}</lib-dee-button
+      >
+    </div>
+    }
+    <h1>Unselected Items</h1>
+    @for (unselectedItem of itemsFacade.unselectedItems$ | async; track
+    unselectedItem.id) {
+    <div class="item-row">
+      @if(showRemoveView) {
+      <lib-dee-button (click)="removeItem(unselectedItem.id)">-</lib-dee-button>
+      }
+      <lib-dee-button
+        (click)="updateItemSelected(unselectedItem, !unselectedItem.selected)"
+        >{{unselectedItem.name}}</lib-dee-button
+      >
+    </div>
+    }
+  </div>
+</lib-dee-tile>

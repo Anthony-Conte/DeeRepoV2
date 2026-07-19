@@ -5,17 +5,18 @@ import {
   CreateItemDto,
   Item
 } from 'packages/shared/models/src/lib/dee-list/item.model';
-import { DeeButton, DeeInput } from '@org/shared-ui';
+import { DeeButton, DeeInput, DeeTile } from '@org/shared-ui';
 import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'lib-feature-items',
-  imports: [AsyncPipe, DeeButton, DeeInput, FormsModule],
+  imports: [AsyncPipe, DeeButton, DeeInput, DeeTile, FormsModule],
   templateUrl: './feature-items.html',
   styleUrl: './feature-items.css'
 })
 export class FeatureItemsComponent implements OnInit {
   public newItemName = '';
   public itemsFacade = inject(ItemsFacade);
+  public showRemoveView = false;
 
   public ngOnInit(): void {
     this.itemsFacade.initItems();
@@ -36,5 +37,9 @@ export class FeatureItemsComponent implements OnInit {
 
   public updateItemSelected(item: Item, selected: boolean): void {
     this.itemsFacade.updateItemSelected(item, selected);
+  }
+
+  public toggleRemoveView(): void {
+    this.showRemoveView = !this.showRemoveView;
   }
 }
