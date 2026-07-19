@@ -15,6 +15,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 })
 export class FeatureItemsComponent implements OnInit {
   public showRemoveView = false;
+  public submitted = false;
 
   public itemsFacade = inject(ItemsFacade);
   private readonly fb = inject(FormBuilder);
@@ -28,12 +29,18 @@ export class FeatureItemsComponent implements OnInit {
   }
 
   public addItem(): void {
+    this.submitted = true;
+    if (this.itemForm.invalid) {
+      return;
+    }
     const newItem: CreateItemDto = {
       name: this.itemForm.get('itemName')?.value || '',
       selected: true
     };
     this.itemsFacade.addItem(newItem);
+    this.showRemoveView = false;
     this.itemForm.reset();
+    this.submitted = false;
   }
 
   public removeItem(itemId: string): void {

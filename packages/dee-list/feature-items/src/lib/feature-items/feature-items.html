@@ -8,6 +8,9 @@
               placeholder="Item name"
               formControlName="itemName"
               name="itemName"
+              [maxlength]="64"
+              [errorMap]="{'required': 'This is required'}"
+              [showErrors]="submitted"
             ></lib-dee-input>
           </form>
           <lib-dee-button (click)="addItem()">+</lib-dee-button>

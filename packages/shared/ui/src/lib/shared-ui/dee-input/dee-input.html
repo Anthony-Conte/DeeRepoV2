@@ -5,4 +5,8 @@
   [value]="value"
   (input)="onInput($event)"
   (blur)="onBlur()"
+  [maxLength]="maxlength"
 />
+@if (showErrors && errorMessage) {
+<p class="error-message">{{ errorMessage }}</p>
+}

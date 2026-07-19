@@ -9,3 +9,9 @@ input {
 input:focus {
   outline: 2px solid var(--dee-color-primary-light);
 }
+
+.error-message {
+  color: var(--dee-color-error);
+  font-size: var(--dee-font-size-sm);
+  margin-top: var(--dee-space-xs);
+}
