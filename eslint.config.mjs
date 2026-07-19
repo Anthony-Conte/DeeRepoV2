@@ -8,8 +8,8 @@ export default [
     ignores: [
       '**/dist',
       '**/vite.config.*.timestamp*',
-      '**/vitest.config.*.timestamp*',
-    ],
+      '**/vitest.config.*.timestamp*'
+    ]
   },
   {
     files: ['**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx'],
@@ -22,32 +22,32 @@ export default [
           depConstraints: [
             {
               sourceTag: 'scope:shared',
-              onlyDependOnLibsWithTags: ['scope:shared'],
+              onlyDependOnLibsWithTags: ['scope:shared']
             },
             {
               sourceTag: 'scope:backend',
-              onlyDependOnLibsWithTags: ['scope:shared'],
+              onlyDependOnLibsWithTags: ['scope:shared']
             },
             {
               sourceTag: 'scope:frontend',
-              onlyDependOnLibsWithTags: ['scope:shared'],
+              onlyDependOnLibsWithTags: ['scope:shared']
             },
             {
               sourceTag: 'scope:shop',
-              onlyDependOnLibsWithTags: ['scope:shop', 'scope:shared'],
+              onlyDependOnLibsWithTags: ['scope:shop', 'scope:shared']
             },
             {
               sourceTag: 'scope:api',
-              onlyDependOnLibsWithTags: ['scope:api', 'scope:shared'],
+              onlyDependOnLibsWithTags: ['scope:api', 'scope:shared']
             },
             {
               sourceTag: 'type:data',
-              onlyDependOnLibsWithTags: ['type:data'],
-            },
-          ],
-        },
-      ],
-    },
+              onlyDependOnLibsWithTags: ['type:data']
+            }
+          ]
+        }
+      ]
+    }
   },
   {
     files: [
@@ -58,9 +58,9 @@ export default [
       '**/*.js',
       '**/*.jsx',
       '**/*.cjs',
-      '**/*.mjs',
+      '**/*.mjs'
     ],
     // Override or add rules here
-    rules: {},
-  },
+    rules: {}
+  }
 ];
