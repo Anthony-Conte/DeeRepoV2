@@ -17,6 +17,7 @@ import {
 } from '@nestjs/swagger';
 import { Response } from 'express';
 import { LoginDto } from './entities/login.entity';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -44,8 +45,7 @@ export class AuthController {
       .send(accessToken); // this is returned in response
   }
 
-  // TODO fix this
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Get('me')
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Get current user profile' })

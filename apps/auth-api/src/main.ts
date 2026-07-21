@@ -17,6 +17,15 @@ async function bootstrap() {
     .setDescription('Auth backend API documentation')
     .setVersion('1.0')
     .addBearerAuth()
+    .addApiKey(
+      {
+        type: 'apiKey',
+        in: 'cookie', // Tell Swagger to use cookies for auth
+        name: 'access_token', // Name of cookie
+        description: 'API JWT Token stored in a cookie'
+      },
+      'cookieAuth' // Security name
+    )
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

@@ -11,6 +11,7 @@ import {
 import { User, UserRole } from './entities/user.entity';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 @ApiTags('User')
 @Controller('user')
@@ -34,6 +35,7 @@ export class UserController {
 
   // TODO Fix this
   // @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(JwtAuthGuard)
   // @Roles(UserRole.ADMIN)
   @Get()
   @ApiBearerAuth()
