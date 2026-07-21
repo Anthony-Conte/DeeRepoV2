@@ -6,7 +6,8 @@ import {
   Patch,
   Param,
   Delete,
-  UseGuards
+  UseGuards,
+  Req
 } from '@nestjs/common';
 
 import { ItemService } from './item.service';
@@ -25,7 +26,8 @@ export class ItemController {
 
   @UseGuards(JwtAuthGuard)
   @Get()
-  findAll() {
+  findAll(@Req() req: any) {
+    console.log(req);
     return this.itemService.findAll();
   }
 
