@@ -11,7 +11,7 @@ import {
 import { User, UserRole } from './entities/user.entity';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { JwtAuthGuard } from '@org/auth';
 
 @ApiTags('User')
 @Controller('user')

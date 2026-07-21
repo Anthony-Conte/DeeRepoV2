@@ -26,7 +26,8 @@
       ],
       "@org/shop/shared-ui": ["packages/shop/shared-ui/src/index.ts"],
       "@org/feature-items": ["./packages/dee-list/feature-items/src/index.ts"],
-      "@org/shared-ui": ["./packages/shared/ui/src/index.ts"]
+      "@org/shared-ui": ["./packages/shared/ui/src/index.ts"],
+      "@org/auth": ["./packages/auth/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

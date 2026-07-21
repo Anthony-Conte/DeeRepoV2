@@ -5,10 +5,15 @@ import { UserService } from './user.service';
 import { User } from './entities/user.entity';
 import { UserController } from './user.controller';
 import { AuthModule } from '../auth/auth.module';
+import { JwtAuthModule } from '@org/auth';
 // import { AuthModule } from '../auth/auth.module';
 
 @Module({
-  imports: [forwardRef(() => AuthModule), TypeOrmModule.forFeature([User])],
+  imports: [
+    forwardRef(() => AuthModule),
+    TypeOrmModule.forFeature([User]),
+    JwtAuthModule
+  ],
   controllers: [UserController],
   providers: [UserService],
   exports: [UserService]

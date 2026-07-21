@@ -6,6 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { AuthController } from './auth/auth.controller';
+import { JwtAuthModule } from '@org/auth';
 
 @Module({
   imports: [
@@ -24,7 +25,8 @@ import { AuthController } from './auth/auth.controller';
       synchronize: false,
       logging: true
     }),
-    AuthModule
+    AuthModule,
+    JwtAuthModule
   ],
   controllers: [AppController, AuthController],
   providers: [AppService]

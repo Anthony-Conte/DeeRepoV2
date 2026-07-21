@@ -17,7 +17,7 @@ import {
 } from '@nestjs/swagger';
 import { Response } from 'express';
 import { LoginDto } from './entities/login.entity';
-import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { JwtAuthGuard } from '@org/auth';
 
 @ApiTags('Auth')
 @Controller('auth')
