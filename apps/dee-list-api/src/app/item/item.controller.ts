@@ -6,11 +6,13 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards
 } from '@nestjs/common';
 
 import { ItemService } from './item.service';
 import { UpdateItemDto } from './dto/update-item.dto';
 import { CreateItemRequest } from './dto/create-item.dto';
+import { JwtAuthGuard } from '@org/auth';
 
 @Controller('items')
 export class ItemController {
@@ -21,6 +23,7 @@ export class ItemController {
     return this.itemService.create(createItemDto);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get()
   findAll() {
     return this.itemService.findAll();

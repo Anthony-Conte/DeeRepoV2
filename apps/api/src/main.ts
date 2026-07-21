@@ -1,6 +1,11 @@
 import express from 'express';
 import { ProductsService } from '@org/api/products';
-import { ApiResponse, Product, ProductFilter, PaginatedResponse } from '@org/models';
+import {
+  ApiResponse,
+  Product,
+  ProductFilter,
+  PaginatedResponse
+} from '@org/models';
 
 const host = process.env.HOST ?? 'localhost';
 const port = process.env.PORT ? Number(process.env.PORT) : 3333;
@@ -15,7 +20,10 @@ app.use(express.json());
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  res.header(
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-Type, Accept'
+  );
   if (req.method === 'OPTIONS') {
     res.sendStatus(200);
   } else {
@@ -55,7 +63,7 @@ app.get('/api/products', (req, res) => {
 
     const response: ApiResponse<PaginatedResponse<Product>> = {
       data: result,
-      success: true,
+      success: true
     };
 
     res.json(response);
@@ -63,7 +71,7 @@ app.get('/api/products', (req, res) => {
     const response: ApiResponse<null> = {
       data: null,
       success: false,
-      error: error instanceof Error ? error.message : 'Unknown error',
+      error: error instanceof Error ? error.message : 'Unknown error'
     };
     res.status(500).json(response);
   }
@@ -77,14 +85,14 @@ app.get('/api/products/:id', (req, res) => {
       const response: ApiResponse<null> = {
         data: null,
         success: false,
-        error: 'Product not found',
+        error: 'Product not found'
       };
       return res.status(404).json(response);
     }
 
     const response: ApiResponse<Product> = {
       data: product,
-      success: true,
+      success: true
     };
 
     res.json(response);
@@ -92,7 +100,7 @@ app.get('/api/products/:id', (req, res) => {
     const response: ApiResponse<null> = {
       data: null,
       success: false,
-      error: error instanceof Error ? error.message : 'Unknown error',
+      error: error instanceof Error ? error.message : 'Unknown error'
     };
     res.status(500).json(response);
   }
@@ -103,14 +111,14 @@ app.get('/api/products-metadata/categories', (req, res) => {
     const categories = productsService.getCategories();
     const response: ApiResponse<string[]> = {
       data: categories,
-      success: true,
+      success: true
     };
     res.json(response);
   } catch (error) {
     const response: ApiResponse<null> = {
       data: null,
       success: false,
-      error: error instanceof Error ? error.message : 'Unknown error',
+      error: error instanceof Error ? error.message : 'Unknown error'
     };
     res.status(500).json(response);
   }
@@ -121,14 +129,14 @@ app.get('/api/products-metadata/price-range', (req, res) => {
     const priceRange = productsService.getPriceRange();
     const response: ApiResponse<{ min: number; max: number }> = {
       data: priceRange,
-      success: true,
+      success: true
     };
     res.json(response);
   } catch (error) {
     const response: ApiResponse<null> = {
       data: null,
       success: false,
-      error: error instanceof Error ? error.message : 'Unknown error',
+      error: error instanceof Error ? error.message : 'Unknown error'
     };
     res.status(500).json(response);
   }

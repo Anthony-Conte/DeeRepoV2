@@ -4,12 +4,13 @@ import { AppService } from './app.service';
 import { ItemModule } from './item/item.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
+import { JwtAuthModule } from '@org/auth';
 
 @Module({
   imports: [
     ItemModule,
     ConfigModule.forRoot({
-      isGlobal: true,
+      isGlobal: true
     }),
     TypeOrmModule.forRoot({
       type: 'postgres',
@@ -20,10 +21,11 @@ import { ConfigModule } from '@nestjs/config';
       database: process.env.DB_NAME,
       autoLoadEntities: true,
       synchronize: false,
-      logging: true,
+      logging: true
     }),
+    JwtAuthModule
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService]
 })
 export class AppModule {}
