@@ -1,2 +1,3 @@
 export * from './lib/auth.module';
-export * from './guards/jwt-auth.guard';
+export * from './guards';
+export * from './model';

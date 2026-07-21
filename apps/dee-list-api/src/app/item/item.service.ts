@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -10,35 +10,70 @@ import { CreateItemDto } from '@org/models';
 export class ItemService {
   constructor(
     @InjectRepository(Item)
-    private readonly itemRepository: Repository<Item>,
+    private readonly itemRepository: Repository<Item>
   ) {}
 
-  async create(createItemDto: CreateItemDto): Promise<Item> {
+  async create(
+    createItemDto: CreateItemDto,
+    createdByUserId: string
+  ): Promise<Item> {
     const item = this.itemRepository.create({
       ...createItemDto,
-      createdByUserId: '550e8400-e29b-41d4-a716-446655440000', // Replace with actual user ID in a real application
+      createdByUserId
     });
 
     return this.itemRepository.save(item);
   }
 
-  async findAll(): Promise<Item[]> {
-    return this.itemRepository.find();
-  }
-
-  async findOne(id: string): Promise<Item | null> {
-    return this.itemRepository.findOne({
-      where: { id },
+  async findAll(createdByUserId: string): Promise<Item[]> {
+    return this.itemRepository.find({
+      where: { createdByUserId }
     });
   }
 
-  async update(id: string, updateItemDto: UpdateItemDto): Promise<Item | null> {
-    await this.itemRepository.update(id, updateItemDto);
+  async findOne(id: string, createdByUserId: string): Promise<Item> {
+    const item = await this.itemRepository.findOne({
+      where: {
+        id,
+        createdByUserId
+      }
+    });
 
-    return this.findOne(id);
+    if (!item) {
+      throw new NotFoundException('Item not found');
+    }
+
+    return item;
   }
 
-  async remove(id: string): Promise<void> {
-    await this.itemRepository.delete(id);
+  async update(
+    id: string,
+    updateItemDto: UpdateItemDto,
+    createdByUserId: string
+  ): Promise<Item> {
+    const result = await this.itemRepository.update(
+      {
+        id,
+        createdByUserId
+      },
+      updateItemDto
+    );
+
+    if (result.affected === 0) {
+      throw new NotFoundException('Item not found');
+    }
+
+    return this.findOne(id, createdByUserId);
+  }
+
+  async remove(id: string, createdByUserId: string): Promise<void> {
+    const result = await this.itemRepository.delete({
+      id,
+      createdByUserId
+    });
+
+    if (result.affected === 0) {
+      throw new NotFoundException('Item not found');
+    }
   }
 }
