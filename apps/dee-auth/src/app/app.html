@@ -1,2 +1,35 @@
-<app-nx-welcome></app-nx-welcome>
+<div class="login-container">
+  <h1>Welcome to DeeRepo</h1>
+  <lib-dee-tile>
+    <div class="login-content">
+      <!-- @if (authFacade.error$ | async) {
+      <lib-dee-alert></lib-dee-alert>
+      } -->
+      <form [formGroup]="form" (ngSubmit)="submit()" class="login-form">
+        <lib-dee-input
+          label="Email"
+          [placeholder]="'email@test.com'"
+          [type]="'email'"
+          formControlName="email"
+          [showErrors]="submitted()"
+        />
+
+        <lib-dee-input
+          label="Password"
+          [placeholder]="'Password'"
+          [type]="'password'"
+          formControlName="password"
+          [showErrors]="submitted()"
+        />
+
+        <div class="button-group">
+          <lib-dee-button variant="primary" (click)="submit()"
+            >Log in</lib-dee-button
+          >
+        </div>
+      </form>
+    </div>
+  </lib-dee-tile>
+</div>
+
 <router-outlet></router-outlet>

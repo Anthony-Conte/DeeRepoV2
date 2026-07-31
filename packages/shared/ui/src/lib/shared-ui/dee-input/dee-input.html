@@ -1,6 +1,6 @@
 <span>{{ label }}</span>
 <input
-  type="text"
+  [type]="type"
   [placeholder]="placeholder"
   [value]="value"
   (input)="onInput($event)"

@@ -12,6 +12,7 @@ export class DeeInput implements ControlValueAccessor, AfterViewInit {
   @Input() maxlength?: number;
   @Input() errorMap: Record<string, string> = {};
   @Input() showErrors = false;
+  @Input() type: 'text' | 'email' | 'password' | 'number' = 'text';
 
   value = '';
   disabled = false;
