@@ -17,7 +17,7 @@ import {
 } from '@nestjs/swagger';
 import { Response } from 'express';
 import { LoginDto } from './entities/login.entity';
-import { JwtAuthGuard } from '@org/auth';
+import { AuthenticatedRequest, JwtAuthGuard } from '@org/auth';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -42,7 +42,8 @@ export class AuthController {
         httpOnly: true,
         maxAge: 60 * 60 * 1000
       })
-      .send(accessToken); // this is returned in response
+      .sendStatus(204);
+    // .send(accessToken); // this is returned in response
   }
 
   @UseGuards(JwtAuthGuard)
@@ -56,10 +57,9 @@ export class AuthController {
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   getProfile(
     @Req()
-    req: {
-      user: { sub: number; username: string; role: string };
-    }
-  ): { id: number; username: string; role: string } {
+    req: AuthenticatedRequest
+  ): { id: string; username: string; role: string } {
+    // TODO make this an actual type
     return {
       id: req.user?.sub,
       username: req.user?.username,
