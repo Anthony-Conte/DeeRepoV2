@@ -6,4 +6,4 @@ import { Component } from '@angular/core';
   templateUrl: './feature-auth.html',
   styleUrl: './feature-auth.css'
 })
-export class FeatureAuth {}
+export class FeatureAuthComponent {}
