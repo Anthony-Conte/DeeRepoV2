@@ -1,0 +1,9 @@
+{
+  "name": "dee-auth-e2e",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/dee-auth-e2e/src",
+  "implicitDependencies": ["dee-auth"],
+  "// targets": "to see all targets run: nx show project dee-auth-e2e --web",
+  "targets": {}
+}
