@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { FeatureAuthComponent } from './feature-auth/feature-auth';
-import { provideStore, provideState } from '@ngrx/store';
+import { provideState } from '@ngrx/store';
 import { provideEffects } from '@ngrx/effects';
 import * as fromAuth from './+state/auth.reducer';
 import { AuthEffects } from './+state/auth.effects';

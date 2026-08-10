@@ -1,1 +1,5 @@
 <p>FeatureAuth works!</p>
+<lib-dee-button (click)="authFacade.initAuth()" []>Log in</lib-dee-button>
+@if (authFacade.auth$ | async; as auth) {
+<p>Current User: {{ auth.username }}</p>
+}

@@ -3,11 +3,11 @@ import { Route } from '@angular/router';
 export const appRoutes: Route[] = [
   {
     path: '',
-    redirectTo: 'items',
+    redirectTo: 'auth',
     pathMatch: 'full'
   },
   {
-    path: 'items',
+    path: 'auth',
     loadChildren: () =>
       import('@org/feature-auth').then((m) => m.FEATURE_AUTH_ROUTES)
   }
