@@ -1,0 +1,13 @@
+{
+  "name": "feature-schedule",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/dee-tv/feature-schedule/src",
+  "prefix": "dee-tv",
+  "projectType": "library",
+  "tags": ["scope:dee-tv", "type:feature"],
+  "targets": {
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}
