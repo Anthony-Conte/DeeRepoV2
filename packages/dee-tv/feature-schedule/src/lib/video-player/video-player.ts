@@ -1,6 +1,6 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, inject } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { Component, inject, Input } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { catchError, map, merge, of, startWith, Subject, switchMap } from 'rxjs';
 import { Episode } from '../+state/schedule.models';
 import { ScheduleService } from '../services/schedule.service';
@@ -21,11 +21,13 @@ type VideoPlayerState =
 
 @Component({
   selector: 'dee-tv-video-player',
-  imports: [AsyncPipe, RouterLink],
+  imports: [AsyncPipe],
   templateUrl: './video-player.html',
   styleUrl: './video-player.css'
 })
 export class VideoPlayer {
+  @Input() guideMode = false;
+
   private readonly route = inject(ActivatedRoute);
   private readonly scheduleService = inject(ScheduleService);
   private readonly nextEpisode$ = new Subject<{

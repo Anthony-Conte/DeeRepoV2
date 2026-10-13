@@ -1,4 +1,5 @@
 import { Route } from '@angular/router';
+import { DeeTvShell } from './dee-tv-shell/dee-tv-shell';
 
 export const appRoutes: Route[] = [
   {
@@ -7,13 +8,7 @@ export const appRoutes: Route[] = [
     pathMatch: 'full'
   },
   {
-    path: 'schedule',
-    loadChildren: () =>
-      import('@org/feature-schedule').then((m) => m.featureScheduleRoutes)
-  },
-  {
-    path: 'watch',
-    loadChildren: () =>
-      import('@org/feature-schedule').then((m) => m.featureVideoRoutes)
+    path: '**',
+    component: DeeTvShell
   }
 ];

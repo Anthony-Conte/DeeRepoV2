@@ -1,27 +1,6 @@
-<main class="player">
-  <a routerLink="/schedule">Back to schedule</a>
-
+<main class="player" [class.guide-preview]="guideMode">
   @if (state$ | async; as state) {
-    @switch (state.status) {
-      @case ('loading') {
-        <p>Loading video…</p>
-      }
-      @case ('missing-id') {
-        <p role="alert">Choose an episode from the schedule to play it.</p>
-      }
-      @case ('not-found') {
-        <p role="alert">That episode could not be found.</p>
-      }
-      @case ('error') {
-        <p role="alert">Unable to load the episode.</p>
-      }
-      @case ('ready') {
-        <h1>
-          @if (state.channelName) {
-            {{ state.channelName }}:
-          }
-          {{ state.episode.title }}
-        </h1>
+    @if (state.status === 'ready') {
         <video
           autoplay
           playsinline
@@ -33,7 +12,6 @@
         >
           Your browser does not support HTML video.
         </video>
-      }
     }
   }
 </main>
