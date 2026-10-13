@@ -14,6 +14,7 @@ export class ScheduleFacade {
    */
   loaded$ = this.store.pipe(select(ScheduleSelectors.selectScheduleLoaded));
   schedule$ = this.store.pipe(select(ScheduleSelectors.selectSchedule));
+  error$ = this.store.pipe(select(ScheduleSelectors.selectScheduleError));
 
   /**
    * Use the initialization action to perform one

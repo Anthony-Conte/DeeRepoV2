@@ -1,0 +1,22 @@
+:host {
+  display: block;
+  padding: 1.5rem;
+}
+
+.schedule {
+  max-width: 48rem;
+  margin: 0 auto;
+}
+
+ul {
+  display: grid;
+  gap: 0.75rem;
+  padding: 0;
+  list-style: none;
+}
+
+li {
+  padding: 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+}

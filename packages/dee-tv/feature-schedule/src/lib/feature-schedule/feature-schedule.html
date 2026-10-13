@@ -1,1 +1,21 @@
-<p>FeatureSchedule works!</p>
+<section class="schedule">
+  <h1>TV Schedule</h1>
+
+  @if (error$ | async) {
+    <p role="alert">Unable to load the schedule.</p>
+  } @else if (loaded$ | async) {
+    @if (schedule$ | async; as schedule) {
+      @if (schedule.length > 0) {
+        <ul>
+          @for (show of schedule; track show.id) {
+            <li>{{ show.title }}</li>
+          }
+        </ul>
+      } @else {
+        <p>No shows are scheduled.</p>
+      }
+    }
+  } @else {
+    <p>Loading schedule…</p>
+  }
+</section>
