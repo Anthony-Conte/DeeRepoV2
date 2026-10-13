@@ -22,7 +22,20 @@
                   <lib-dee-tile
                     [header]="channel.name"
                     [footer]="'Now playing: ' + channel.nowPlaying"
-                  />
+                  >
+                    @if (activeChannelId === channel.id) {
+                      <span
+                        class="watching-indicator"
+                        role="img"
+                        aria-label="Currently watching"
+                        title="Currently watching"
+                      >
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                          <path d="M4 6h11a2 2 0 0 1 2 2v1l4-3v12l-4-3v1a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2Z" />
+                        </svg>
+                      </span>
+                    }
+                  </lib-dee-tile>
                 </a>
               </li>
             }
