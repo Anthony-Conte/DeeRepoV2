@@ -1,42 +1,32 @@
 <section class="schedule">
-  <h1>TV Schedule</h1>
+  <h1>TV Channels</h1>
 
-  <h2>Channels</h2>
-  @if (channels$ | async; as channels) {
-    @if (channels.length > 0) {
-      <ul>
-        @for (channel of channels; track channel.id) {
-          <li>
-            <a [routerLink]="['/watch']" [queryParams]="{ channel: channel.id }">
-              {{ channel.name }} ({{ channel.episodeCount }} episodes)
-            </a>
-          </li>
+  @if (channelState$ | async; as state) {
+    @switch (state.status) {
+      @case ('loading') {
+        <p>Loading channels…</p>
+      }
+      @case ('error') {
+        <p role="alert">Unable to load channels.</p>
+      }
+      @case ('ready') {
+        @if (state.channels.length > 0) {
+          <ul>
+            @for (channel of state.channels; track channel.id) {
+              <li>
+                <a
+                  [routerLink]="['/watch']"
+                  [queryParams]="{ channel: channel.id }"
+                >
+                  {{ channel.name }} ({{ channel.episodeCount }} episodes)
+                </a>
+              </li>
+            }
+          </ul>
+        } @else {
+          <p>No channels are available.</p>
         }
-      </ul>
-    } @else {
-      <p>No channels are available.</p>
-    }
-  }
-
-  @if (error$ | async) {
-    <p role="alert">Unable to load the schedule.</p>
-  } @else if (loaded$ | async) {
-    @if (schedule$ | async; as schedule) {
-      @if (schedule.length > 0) {
-        <ul>
-          @for (episode of schedule; track episode.id) {
-            <li>
-              <a [routerLink]="['/watch']" [queryParams]="{ video: episode.id }">
-                {{ episode.title }}
-              </a>
-            </li>
-          }
-        </ul>
-      } @else {
-        <p>No shows are scheduled.</p>
       }
     }
-  } @else {
-    <p>Loading schedule…</p>
   }
 </section>
