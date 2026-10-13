@@ -1,0 +1,9 @@
+{
+  "name": "dee-tv-e2e",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/dee-tv-e2e/src",
+  "implicitDependencies": ["dee-tv"],
+  "// targets": "to see all targets run: nx show project dee-tv-e2e --web",
+  "targets": {}
+}
