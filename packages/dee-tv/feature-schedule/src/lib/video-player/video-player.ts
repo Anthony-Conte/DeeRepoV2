@@ -45,17 +45,18 @@ export class VideoPlayer {
   );
 
   seekToStart(video: HTMLVideoElement, startAt: string | null): void {
-    const startSeconds = Number(startAt);
-    if (
-      startAt === null ||
-      !Number.isFinite(startSeconds) ||
-      startSeconds < 0
-    ) {
-      return;
+    if (startAt !== null) {
+      const startSeconds = Number(startAt);
+      if (Number.isFinite(startSeconds) && startSeconds >= 0) {
+        video.currentTime = Number.isFinite(video.duration)
+          ? Math.min(startSeconds, video.duration)
+          : startSeconds;
+        return;
+      }
     }
 
-    video.currentTime = Number.isFinite(video.duration)
-      ? Math.min(startSeconds, video.duration)
-      : startSeconds;
+    if (Number.isFinite(video.duration) && video.duration > 0) {
+      video.currentTime = video.duration * (0.25 + Math.random() * 0.5);
+    }
   }
 }
