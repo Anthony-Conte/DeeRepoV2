@@ -11,16 +11,19 @@
       }
       @case ('ready') {
         @if (state.channels.length > 0) {
+          @let activeChannelId = activeChannelId$ | async;
           <ul>
             @for (channel of state.channels; track channel.id) {
-              <li>
+              <li [class.selected]="activeChannelId === channel.id">
                 <a
                   [routerLink]="['/watch']"
                   [queryParams]="{ channel: channel.id }"
                 >
-                  {{ channel.name }}
+                  <lib-dee-tile
+                    [header]="channel.name"
+                    [footer]="'Now playing: ' + channel.nowPlaying"
+                  />
                 </a>
-                <p>Now playing: {{ channel.nowPlaying }}</p>
               </li>
             }
           </ul>
