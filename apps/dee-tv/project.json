@@ -49,6 +49,9 @@
       "continuous": true,
       "executor": "@angular/build:dev-server",
       "defaultConfiguration": "development",
+      "options": {
+        "host": "0.0.0.0"
+      },
       "configurations": {
         "production": {
           "buildTarget": "dee-tv:build:production"
