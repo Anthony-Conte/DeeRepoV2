@@ -1,16 +1,14 @@
-import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { Injectable, inject } from '@angular/core';
+import { Observable } from 'rxjs';
 import { Schedule } from '../+state/schedule.models';
-
-const MOCK_SCHEDULE: Schedule = [
-  { id: 'morning-news', title: 'Morning News' },
-  { id: 'wildlife-today', title: 'Wildlife Today' },
-  { id: 'classic-cinema', title: 'Classic Cinema' }
-];
 
 @Injectable({ providedIn: 'root' })
 export class ScheduleService {
+  private readonly http = inject(HttpClient);
+  private readonly apiUrl = `http://${window.location.hostname}:3002/api/videos`;
+
   getSchedule(): Observable<Schedule> {
-    return of(MOCK_SCHEDULE);
+    return this.http.get<Schedule>(this.apiUrl);
   }
 }

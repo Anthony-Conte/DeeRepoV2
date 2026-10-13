@@ -1,6 +1,8 @@
-export interface TvShow {
+export interface Episode {
   id: string;
   title: string;
+  path: string;
+  url: string;
 }
 
-export type Schedule = TvShow[];
+export type Schedule = Episode[];

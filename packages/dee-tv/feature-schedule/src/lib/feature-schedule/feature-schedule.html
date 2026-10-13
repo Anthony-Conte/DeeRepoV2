@@ -7,8 +7,10 @@
     @if (schedule$ | async; as schedule) {
       @if (schedule.length > 0) {
         <ul>
-          @for (show of schedule; track show.id) {
-            <li>{{ show.title }}</li>
+          @for (episode of schedule; track episode.id) {
+            <li>
+              <a [href]="episode.url">{{ episode.title }}</a>
+            </li>
           }
         </ul>
       } @else {
