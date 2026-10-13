@@ -28,7 +28,7 @@ import { FeatureSchedule, VideoPlayer } from '@org/feature-schedule';
       position: fixed; z-index: 5; right: 1.5rem; bottom: 1.5rem;
       width: min(28vw, 24rem); aspect-ratio: 16 / 9; min-height: 0;
       overflow: hidden; border: 2px solid #64748b; border-radius: .75rem;
-      background: #000; box-shadow: 0 1rem 3rem #000a;
+      background: #000; box-shadow: 0 1rem 3rem #000a; cursor: pointer;
     }
   `]
 })
@@ -50,6 +50,23 @@ export class DeeTvShell {
 
     // The channel selection click is a user gesture, so browsers can grant fullscreen here.
     void playerView.requestFullscreen().catch(() => undefined);
+  }
+
+  @HostListener('document:click', ['$event'])
+  onMiniPlayerClick(event: MouseEvent): void {
+    if (!(event.target instanceof Element)) return;
+    if (!event.target.closest('.guide-mode .player-view')) return;
+
+    const playerView = document.querySelector<HTMLElement>('.player-view');
+    if (!playerView) return;
+
+    // Keep the click's user activation available for the fullscreen request.
+    if (!document.fullscreenElement) {
+      void playerView.requestFullscreen().catch(() => undefined);
+    }
+    void this.router.navigate(['/watch'], {
+      queryParamsHandling: 'preserve'
+    });
   }
 
   @HostListener('document:fullscreenchange')
