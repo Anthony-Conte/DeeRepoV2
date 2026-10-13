@@ -11,6 +11,7 @@ export interface Channel {
   id: string;
   name: string;
   episodeCount: number;
+  nowPlaying: string;
 }
 
 export interface ChannelProgram {

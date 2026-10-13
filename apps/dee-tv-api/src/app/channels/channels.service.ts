@@ -39,10 +39,34 @@ export class ChannelsService {
 
   async findAll(): Promise<Channel[]> {
     const groups = this.groupEpisodes(await this.videosService.findAll());
-    return [...groups.values()].map(({ channel, episodes }) => ({
-      ...channel,
-      episodeCount: episodes.length
-    }));
+    const videos = [...groups.values()].flatMap(({ episodes }) => episodes);
+    const episodesWithDurations = await this.withDurations(videos);
+    const durationsById = new Map(
+      episodesWithDurations.map((episode) => [
+        episode.id,
+        episode.durationSeconds
+      ])
+    );
+    const nowMs = Date.now();
+
+    return [...groups.values()].map(({ channel, episodes }) => {
+      const scheduledEpisodes = episodes.map((episode) => ({
+        ...episode,
+        durationSeconds: durationsById.get(episode.id) ?? 0
+      }));
+      const currentProgram = this.getCurrentProgram(
+        channel.id,
+        channel.name,
+        scheduledEpisodes,
+        nowMs
+      );
+
+      return {
+        ...channel,
+        episodeCount: episodes.length,
+        nowPlaying: currentProgram.episode.title
+      };
+    });
   }
 
   async findNow(channelId: string): Promise<ChannelProgram> {
@@ -54,6 +78,20 @@ export class ChannelsService {
     }
 
     const episodes = await this.withDurations(group.episodes);
+    return this.getCurrentProgram(
+      group.channel.id,
+      group.channel.name,
+      episodes,
+      Date.now()
+    );
+  }
+
+  private getCurrentProgram(
+    channelId: string,
+    channelName: string,
+    episodes: (VideoFile & { durationSeconds: number })[],
+    nowMs: number
+  ): ChannelProgram {
     const cycleDuration = episodes.reduce(
       (total, episode) => total + episode.durationSeconds,
       0
@@ -61,11 +99,10 @@ export class ChannelsService {
 
     if (cycleDuration <= 0) {
       throw new ServiceUnavailableException(
-        `Channel "${channelId}" has no playable episodes.`
+        `Channel "${channelName}" has no playable episodes.`
       );
     }
 
-    const nowMs = Date.now();
     const elapsedSeconds = (nowMs - this.cycleEpochMs) / 1000;
     let positionSeconds =
       ((elapsedSeconds % cycleDuration) + cycleDuration) % cycleDuration;
@@ -84,8 +121,8 @@ export class ChannelsService {
       nowMs + (selectedEpisode.durationSeconds - positionSeconds) * 1000;
 
     return {
-      channelId: group.channel.id,
-      channelName: group.channel.name,
+      channelId,
+      channelName,
       episode: selectedEpisode,
       startSeconds: positionSeconds,
       generatedAt: new Date(nowMs).toISOString(),
@@ -97,7 +134,10 @@ export class ChannelsService {
   private groupEpisodes(videos: VideoFile[]) {
     const groups = new Map<
       string,
-      { channel: Omit<Channel, 'episodeCount'>; episodes: VideoFile[] }
+      {
+        channel: Omit<Channel, 'episodeCount' | 'nowPlaying'>;
+        episodes: VideoFile[];
+      }
     >();
 
     for (const video of videos) {
@@ -106,11 +146,12 @@ export class ChannelsService {
       let group = groups.get(id);
 
       if (!group) {
-        group = {
+        const newGroup = {
           channel: { id, name: showName },
           episodes: []
         };
-        groups.set(id, group);
+        groups.set(id, newGroup);
+        group = newGroup;
       }
 
       group.episodes.push(video);

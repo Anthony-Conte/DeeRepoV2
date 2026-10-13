@@ -18,8 +18,9 @@
                   [routerLink]="['/watch']"
                   [queryParams]="{ channel: channel.id }"
                 >
-                  {{ channel.name }} ({{ channel.episodeCount }} episodes)
+                  {{ channel.name }}
                 </a>
+                <p>Now playing: {{ channel.nowPlaying }}</p>
               </li>
             }
           </ul>
