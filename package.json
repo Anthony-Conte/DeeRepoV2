@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "dee-tv:kiosk": "\"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome\" --kiosk --app=http://localhost:4200 --autoplay-policy=no-user-gesture-required"
+    "dee-tv:dev": "nx run-many --target=serve --projects=dee-tv,dee-tv-api --configuration=development",
+    "dee-tv:kiosk": "\"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome\" --user-data-dir=/tmp/dee-tv-kiosk-profile --kiosk --app=http://localhost:4200 --autoplay-policy=no-user-gesture-required"
   },
   "private": true,
   "dependencies": {
