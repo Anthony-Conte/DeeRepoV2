@@ -9,7 +9,9 @@
         <ul>
           @for (episode of schedule; track episode.id) {
             <li>
-              <a [href]="episode.url">{{ episode.title }}</a>
+              <a [routerLink]="['/watch']" [queryParams]="{ video: episode.id }">
+                {{ episode.title }}
+              </a>
             </li>
           }
         </ul>

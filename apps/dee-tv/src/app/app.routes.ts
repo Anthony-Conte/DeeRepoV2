@@ -10,5 +10,10 @@ export const appRoutes: Route[] = [
     path: 'schedule',
     loadChildren: () =>
       import('@org/feature-schedule').then((m) => m.featureScheduleRoutes)
+  },
+  {
+    path: 'watch',
+    loadChildren: () =>
+      import('@org/feature-schedule').then((m) => m.featureVideoRoutes)
   }
 ];

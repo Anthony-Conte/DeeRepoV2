@@ -5,5 +5,6 @@ export * from './lib/+state/schedule.reducer';
 export * from './lib/+state/schedule.actions';
 export * from './lib/services/schedule.service';
 export * from './lib/lib.routes';
+export * from './lib/video-player/video-player';
 
 export * from './lib/feature-schedule/feature-schedule';

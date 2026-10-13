@@ -1,10 +1,11 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { ScheduleFacade } from '../+state/schedule.facade';
 
 @Component({
   selector: 'dee-tv-feature-schedule',
-  imports: [AsyncPipe],
+  imports: [AsyncPipe, RouterLink],
   templateUrl: './feature-schedule.html',
   styleUrl: './feature-schedule.css'
 })

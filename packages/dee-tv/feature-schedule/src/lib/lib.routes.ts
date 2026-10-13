@@ -5,6 +5,7 @@ import { provideEffects } from '@ngrx/effects';
 import * as fromSchedule from './+state/schedule.reducer';
 import { ScheduleEffects } from './+state/schedule.effects';
 import { ScheduleFacade } from './+state/schedule.facade';
+import { VideoPlayer } from './video-player/video-player';
 
 export const featureScheduleRoutes: Route[] = [
   {
@@ -18,5 +19,12 @@ export const featureScheduleRoutes: Route[] = [
       ),
       provideEffects(ScheduleEffects)
     ]
+  }
+];
+
+export const featureVideoRoutes: Route[] = [
+  {
+    path: '',
+    component: VideoPlayer
   }
 ];
