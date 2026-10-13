@@ -113,6 +113,8 @@ export class VideoPlayer {
     startAt: string | null,
     offsetObservedAt: number | null
   ): void {
+    let targetTime: number | null = null;
+
     if (startAt !== null) {
       const startSeconds =
         Number(startAt) +
@@ -120,16 +122,20 @@ export class VideoPlayer {
           ? 0
           : Math.max(0, (Date.now() - offsetObservedAt) / 1000));
       if (Number.isFinite(startSeconds) && startSeconds >= 0) {
-        video.currentTime = Number.isFinite(video.duration)
+        targetTime = Number.isFinite(video.duration)
           ? Math.min(startSeconds, video.duration)
           : startSeconds;
-        return;
       }
     }
 
-    if (Number.isFinite(video.duration) && video.duration > 0) {
-      video.currentTime = video.duration * (0.25 + Math.random() * 0.5);
+    if (targetTime === null && Number.isFinite(video.duration) && video.duration > 0) {
+      targetTime = video.duration * (0.25 + Math.random() * 0.5);
     }
+
+    if (targetTime !== null) video.currentTime = targetTime;
+
+    // Seeking at metadata time can interrupt autoplay, so explicitly resume afterward.
+    void video.play().catch(() => undefined);
   }
 
   playNextChannelEpisode(
