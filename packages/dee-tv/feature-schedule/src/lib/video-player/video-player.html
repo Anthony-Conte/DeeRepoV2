@@ -16,14 +16,20 @@
         <p role="alert">Unable to load the episode.</p>
       }
       @case ('ready') {
-        <h1>{{ state.episode.title }}</h1>
+        <h1>
+          @if (state.channelName) {
+            {{ state.channelName }}:
+          }
+          {{ state.episode.title }}
+        </h1>
         <video
           controls
           autoplay
           playsinline
           preload="metadata"
           [src]="state.episode.url"
-          (loadedmetadata)="seekToStart(player, state.startAt)"
+          (loadedmetadata)="seekToStart(player, state.startAt, state.offsetObservedAt)"
+          (ended)="playNextChannelEpisode(state.channelId)"
           #player
         >
           Your browser does not support HTML video.

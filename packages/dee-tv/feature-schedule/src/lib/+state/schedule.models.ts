@@ -6,3 +6,19 @@ export interface Episode {
 }
 
 export type Schedule = Episode[];
+
+export interface Channel {
+  id: string;
+  name: string;
+  episodeCount: number;
+}
+
+export interface ChannelProgram {
+  channelId: string;
+  channelName: string;
+  episode: Episode & { durationSeconds: number };
+  startSeconds: number;
+  generatedAt: string;
+  programStartedAt: string;
+  nextChangeAt: string;
+}
