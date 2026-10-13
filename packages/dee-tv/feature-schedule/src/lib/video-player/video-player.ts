@@ -132,10 +132,42 @@ export class VideoPlayer {
       targetTime = video.duration * (0.25 + Math.random() * 0.5);
     }
 
-    if (targetTime !== null) video.currentTime = targetTime;
+    if (
+      targetTime !== null &&
+      Math.abs(video.currentTime - targetTime) > 0.1
+    ) {
+      // Resume after the browser finishes seeking to the current schedule position.
+      video.addEventListener(
+        'seeked',
+        () => this.startPlayback(video),
+        { once: true }
+      );
+      video.currentTime = targetTime;
+      return;
+    }
 
-    // Seeking at metadata time can interrupt autoplay, so explicitly resume afterward.
-    void video.play().catch(() => undefined);
+    this.startPlayback(video);
+  }
+
+  private startPlayback(video: HTMLVideoElement): void {
+    void video.play().catch((error: unknown) => {
+      console.error('Dee TV could not start video playback.', {
+        source: video.currentSrc || video.src,
+        currentTime: video.currentTime,
+        error
+      });
+    });
+  }
+
+  logVideoError(video: HTMLVideoElement): void {
+    console.error('Dee TV video media error.', {
+      source: video.currentSrc || video.src,
+      currentTime: video.currentTime,
+      networkState: video.networkState,
+      readyState: video.readyState,
+      code: video.error?.code,
+      message: video.error?.message
+    });
   }
 
   playNextChannelEpisode(

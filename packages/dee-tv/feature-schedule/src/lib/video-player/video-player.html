@@ -8,6 +8,7 @@
           [src]="state.episode.url"
           (loadedmetadata)="seekToStart(player, state.startAt, state.offsetObservedAt)"
           (ended)="playNextChannelEpisode(state.channelId, state.episode.id)"
+          (error)="logVideoError(player)"
           #player
         >
           Your browser does not support HTML video.
