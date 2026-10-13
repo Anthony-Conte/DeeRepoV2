@@ -1,6 +1,6 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { Channel, ChannelProgram } from './channel.model';
+import { Channel, ChannelEpisode, ChannelProgram } from './channel.model';
 import { ChannelsService } from './channels.service';
 
 @ApiTags('channels')
@@ -16,5 +16,13 @@ export class ChannelsController {
   @Get(':channelId/now')
   findNow(@Param('channelId') channelId: string): Promise<ChannelProgram> {
     return this.channelsService.findNow(channelId);
+  }
+
+  @Get(':channelId/next')
+  findNext(
+    @Param('channelId') channelId: string,
+    @Query('after') afterEpisodeId: string
+  ): Promise<ChannelEpisode> {
+    return this.channelsService.findNext(channelId, afterEpisodeId);
   }
 }

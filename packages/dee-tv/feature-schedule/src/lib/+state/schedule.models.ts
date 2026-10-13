@@ -23,3 +23,10 @@ export interface ChannelProgram {
   programStartedAt: string;
   nextChangeAt: string;
 }
+
+export interface NextChannelEpisode {
+  channelId: string;
+  channelName: string;
+  episode: Episode;
+  startSeconds: 0;
+}

@@ -6,7 +6,7 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
-import { Channel, ChannelProgram } from './channel.model';
+import { Channel, ChannelEpisode, ChannelProgram } from './channel.model';
 import { VideoFile } from '../videos/video.model';
 import { VideosService } from '../videos/videos.service';
 
@@ -84,6 +84,35 @@ export class ChannelsService {
       episodes,
       Date.now()
     );
+  }
+
+  async findNext(
+    channelId: string,
+    afterEpisodeId: string
+  ): Promise<ChannelEpisode> {
+    const groups = this.groupEpisodes(await this.videosService.findAll());
+    const group = groups.get(channelId);
+
+    if (!group) {
+      throw new NotFoundException(`Channel "${channelId}" was not found.`);
+    }
+
+    const currentIndex = group.episodes.findIndex(
+      (episode) => episode.id === afterEpisodeId
+    );
+    if (currentIndex < 0) {
+      throw new NotFoundException(
+        `Episode "${afterEpisodeId}" was not found in channel "${channelId}".`
+      );
+    }
+
+    const nextIndex = (currentIndex + 1) % group.episodes.length;
+    return {
+      channelId: group.channel.id,
+      channelName: group.channel.name,
+      episode: group.episodes[nextIndex],
+      startSeconds: 0
+    };
   }
 
   private getCurrentProgram(

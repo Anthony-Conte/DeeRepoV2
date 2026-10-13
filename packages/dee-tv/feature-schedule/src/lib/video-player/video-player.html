@@ -23,13 +23,12 @@
           {{ state.episode.title }}
         </h1>
         <video
-          controls
           autoplay
           playsinline
           preload="metadata"
           [src]="state.episode.url"
           (loadedmetadata)="seekToStart(player, state.startAt, state.offsetObservedAt)"
-          (ended)="playNextChannelEpisode(state.channelId)"
+          (ended)="playNextChannelEpisode(state.channelId, state.episode.id)"
           #player
         >
           Your browser does not support HTML video.

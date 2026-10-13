@@ -16,3 +16,10 @@ export interface ChannelProgram {
   programStartedAt: string;
   nextChangeAt: string;
 }
+
+export interface ChannelEpisode {
+  channelId: string;
+  channelName: string;
+  episode: VideoFile;
+  startSeconds: 0;
+}

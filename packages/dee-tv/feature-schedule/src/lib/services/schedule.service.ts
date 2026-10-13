@@ -1,7 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Channel, ChannelProgram, Schedule } from '../+state/schedule.models';
+import {
+  Channel,
+  ChannelProgram,
+  NextChannelEpisode,
+  Schedule
+} from '../+state/schedule.models';
 
 @Injectable({ providedIn: 'root' })
 export class ScheduleService {
@@ -19,6 +24,16 @@ export class ScheduleService {
   getChannelNow(channelId: string): Observable<ChannelProgram> {
     return this.http.get<ChannelProgram>(
       `${this.apiUrl}/channels/${encodeURIComponent(channelId)}/now`
+    );
+  }
+
+  getNextChannelEpisode(
+    channelId: string,
+    afterEpisodeId: string
+  ): Observable<NextChannelEpisode> {
+    return this.http.get<NextChannelEpisode>(
+      `${this.apiUrl}/channels/${encodeURIComponent(channelId)}/next`,
+      { params: { after: afterEpisodeId } }
     );
   }
 }

@@ -28,13 +28,39 @@ type VideoPlayerState =
 export class VideoPlayer {
   private readonly route = inject(ActivatedRoute);
   private readonly scheduleService = inject(ScheduleService);
-  private readonly refreshChannel$ = new Subject<void>();
+  private readonly nextEpisode$ = new Subject<{
+    channelId: string;
+    episodeId: string;
+  }>();
 
   readonly state$ = merge(
-    this.route.queryParamMap,
-    this.refreshChannel$.pipe(map(() => this.route.snapshot.queryParamMap))
+    this.route.queryParamMap.pipe(
+      map((params) => ({ kind: 'tune' as const, params }))
+    ),
+    this.nextEpisode$.pipe(
+      map((selection) => ({ kind: 'next' as const, selection }))
+    )
   ).pipe(
-    switchMap((params) => {
+    switchMap((request) => {
+      if (request.kind === 'next') {
+        const { channelId, episodeId } = request.selection;
+        return this.scheduleService
+          .getNextChannelEpisode(channelId, episodeId)
+          .pipe(
+            map((program) => ({
+              status: 'ready' as const,
+              episode: program.episode,
+              startAt: '0',
+              offsetObservedAt: null,
+              channelId: program.channelId,
+              channelName: program.channelName
+            })),
+            startWith<VideoPlayerState>({ status: 'loading' }),
+            catchError(() => of<VideoPlayerState>({ status: 'error' }))
+          );
+      }
+
+      const params = request.params;
       const channelId = params.get('channel');
       const videoId = params.get('video');
       const requestedStart = params.get('start');
@@ -104,9 +130,13 @@ export class VideoPlayer {
     }
   }
 
-  playNextChannelEpisode(channelId: string | null): void {
+  playNextChannelEpisode(
+    channelId: string | null,
+    episodeId: string
+  ): void {
     if (channelId) {
-      this.refreshChannel$.next();
+      this.nextEpisode$.next({ channelId, episodeId });
     }
   }
+
 }
