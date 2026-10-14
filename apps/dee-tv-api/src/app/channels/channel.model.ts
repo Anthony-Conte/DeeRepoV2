@@ -5,6 +5,7 @@ export interface Channel {
   name: string;
   episodeCount: number;
   nowPlaying: string;
+  nextChangeAt: string;
 }
 
 export interface ChannelProgram {

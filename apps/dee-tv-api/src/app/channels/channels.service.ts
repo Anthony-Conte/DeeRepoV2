@@ -1,4 +1,5 @@
 import {
+  Logger,
   Injectable,
   NotFoundException,
   ServiceUnavailableException
@@ -18,6 +19,7 @@ const naturalOrder = new Intl.Collator(undefined, {
 
 @Injectable()
 export class ChannelsService {
+  private readonly logger = new Logger(ChannelsService.name);
   private readonly ffprobePath: string;
   private readonly cycleEpochMs: number;
   private readonly durationCache = new Map<string, Promise<number>>();
@@ -49,11 +51,20 @@ export class ChannelsService {
     );
     const nowMs = Date.now();
 
-    return [...groups.values()].map(({ channel, episodes }) => {
-      const scheduledEpisodes = episodes.map((episode) => ({
-        ...episode,
-        durationSeconds: durationsById.get(episode.id) ?? 0
-      }));
+    const channels: Channel[] = [];
+
+    for (const { channel, episodes } of groups.values()) {
+      const scheduledEpisodes = episodes.flatMap((episode) => {
+        const durationSeconds = durationsById.get(episode.id);
+        return durationSeconds === undefined
+          ? []
+          : [{ ...episode, durationSeconds }];
+      });
+
+      if (scheduledEpisodes.length === 0) {
+        continue;
+      }
+
       const currentProgram = this.getCurrentProgram(
         channel.id,
         channel.name,
@@ -61,12 +72,15 @@ export class ChannelsService {
         nowMs
       );
 
-      return {
+      channels.push({
         ...channel,
-        episodeCount: episodes.length,
-        nowPlaying: currentProgram.episode.title
-      };
-    });
+        episodeCount: scheduledEpisodes.length,
+        nowPlaying: currentProgram.episode.title,
+        nextChangeAt: currentProgram.nextChangeAt
+      });
+    }
+
+    return channels;
   }
 
   async findNow(channelId: string): Promise<ChannelProgram> {
@@ -97,7 +111,8 @@ export class ChannelsService {
       throw new NotFoundException(`Channel "${channelId}" was not found.`);
     }
 
-    const currentIndex = group.episodes.findIndex(
+    const episodes = await this.withDurations(group.episodes);
+    const currentIndex = episodes.findIndex(
       (episode) => episode.id === afterEpisodeId
     );
     if (currentIndex < 0) {
@@ -106,11 +121,11 @@ export class ChannelsService {
       );
     }
 
-    const nextIndex = (currentIndex + 1) % group.episodes.length;
+    const nextIndex = (currentIndex + 1) % episodes.length;
     return {
       channelId: group.channel.id,
       channelName: group.channel.name,
-      episode: group.episodes[nextIndex],
+      episode: episodes[nextIndex],
       startSeconds: 0
     };
   }
@@ -164,7 +179,7 @@ export class ChannelsService {
     const groups = new Map<
       string,
       {
-        channel: Omit<Channel, 'episodeCount' | 'nowPlaying'>;
+        channel: Omit<Channel, 'episodeCount' | 'nowPlaying' | 'nextChangeAt'>;
         episodes: VideoFile[];
       }
     >();
@@ -208,34 +223,36 @@ export class ChannelsService {
   private async withDurations(
     videos: VideoFile[]
   ): Promise<(VideoFile & { durationSeconds: number })[]> {
-    try {
-      const results: (VideoFile & { durationSeconds: number })[] = new Array(
-        videos.length
-      );
-      let nextIndex = 0;
-      const readNextDuration = async () => {
-        while (nextIndex < videos.length) {
-          const index = nextIndex++;
-          const video = videos[index];
+    const results: ((VideoFile & { durationSeconds: number }) | null)[] =
+      new Array(videos.length);
+    let nextIndex = 0;
+    const readNextDuration = async () => {
+      while (nextIndex < videos.length) {
+        const index = nextIndex++;
+        const video = videos[index];
+        try {
           results[index] = {
             ...video,
             durationSeconds: await this.getDuration(video)
           };
+        } catch (error) {
+          const reason = error instanceof Error ? error.message : String(error);
+          this.logger.warn(`Skipping video "${video.path}": ${reason}`);
+          results[index] = null;
         }
-      };
+      }
+    };
 
-      await Promise.all(
-        Array.from(
-          { length: Math.min(4, videos.length) },
-          () => readNextDuration()
-        )
-      );
-      return results;
-    } catch {
-      throw new ServiceUnavailableException(
-        'Unable to read video durations. Install ffprobe on the API host or set FFPROBE_PATH.'
-      );
-    }
+    await Promise.all(
+      Array.from(
+        { length: Math.min(4, videos.length) },
+        () => readNextDuration()
+      )
+    );
+
+    return results.filter(
+      (video): video is VideoFile & { durationSeconds: number } => video !== null
+    );
   }
 
   private getDuration(video: VideoFile): Promise<number> {
