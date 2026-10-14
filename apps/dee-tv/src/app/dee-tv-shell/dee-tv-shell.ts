@@ -1,8 +1,21 @@
 import { Component, HostListener, inject } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
-import { filter, map, startWith } from 'rxjs';
+import {
+  catchError,
+  filter,
+  map,
+  of,
+  shareReplay,
+  startWith,
+  switchMap,
+  take
+} from 'rxjs';
 import { AsyncPipe } from '@angular/common';
-import { FeatureSchedule, VideoPlayer } from '@org/feature-schedule';
+import {
+  FeatureSchedule,
+  ScheduleService,
+  VideoPlayer
+} from '@org/feature-schedule';
 
 @Component({
   selector: 'dee-tv-shell',
@@ -15,6 +28,13 @@ import { FeatureSchedule, VideoPlayer } from '@org/feature-schedule';
       </section>
       <section class="player-view">
         <dee-tv-video-player [guideMode]="isGuide === true" />
+        @if (isGuide !== true) {
+          @if (channelNumber$ | async; as channelNumber) {
+            <div class="channel-number" aria-label="Channel {{ channelNumber }}">
+              {{ channelNumber }}
+            </div>
+          }
+        }
       </section>
     </main>
   `,
@@ -23,7 +43,14 @@ import { FeatureSchedule, VideoPlayer } from '@org/feature-schedule';
     .tv-shell { min-height: 100vh; }
     .guide-view { display: none; }
     .guide-mode .guide-view { display: block; }
-    .player-view { min-height: 100vh; }
+    .player-view { position: relative; min-height: 100vh; }
+    .channel-number {
+      position: absolute; z-index: 10; top: 1.5rem; left: 1.5rem;
+      padding: .5rem .85rem; border-radius: .5rem;
+      color: #fff; background: rgb(18 18 18 / 72%);
+      font-size: clamp(1rem, 2.5vw, 1.75rem); font-weight: 700;
+      pointer-events: none;
+    }
     .guide-mode .player-view {
       position: fixed; z-index: 5; right: 1.5rem; bottom: 1.5rem;
       width: min(28vw, 24rem); aspect-ratio: 16 / 9; min-height: 0;
@@ -34,10 +61,33 @@ import { FeatureSchedule, VideoPlayer } from '@org/feature-schedule';
 })
 export class DeeTvShell {
   private readonly router = inject(Router);
+  private readonly scheduleService = inject(ScheduleService);
   readonly isGuide$ = this.router.events.pipe(
     filter((event): event is NavigationEnd => event instanceof NavigationEnd),
     startWith(null),
     map(() => this.router.url.startsWith('/schedule'))
+  );
+  readonly channelNumber$ = this.router.events.pipe(
+    filter((event): event is NavigationEnd => event instanceof NavigationEnd),
+    startWith(null),
+    map(() => {
+      const channel = this.router.parseUrl(this.router.url).queryParams[
+        'channel'
+      ];
+      return typeof channel === 'string' ? channel : channel?.[0] ?? null;
+    }),
+    switchMap((channelId) => {
+      if (!channelId) return of(null);
+
+      return this.scheduleService.getChannels().pipe(
+        map((channels) => {
+          const index = channels.findIndex((item) => item.id === channelId);
+          return index < 0 ? null : index + 1;
+        }),
+        catchError(() => of(null))
+      );
+    }),
+    shareReplay({ bufferSize: 1, refCount: true })
   );
 
   @HostListener('document:click', ['$event'])
@@ -80,7 +130,7 @@ export class DeeTvShell {
     });
   }
 
-  @HostListener('document:keydown', ['$event'])
+  @HostListener('window:keydown', ['$event'])
   onRemoteKey(event: KeyboardEvent): void {
     if (['Escape', 'Backspace', 'BrowserBack', 'GoBack'].includes(event.key)) {
       event.preventDefault();
@@ -91,6 +141,15 @@ export class DeeTvShell {
       void this.router.navigate(['/schedule'], {
         queryParamsHandling: 'preserve'
       });
+      return;
+    }
+
+    if (
+      (document.fullscreenElement || this.router.url.startsWith('/watch')) &&
+      (event.key === 'ArrowUp' || event.key === 'ArrowDown')
+    ) {
+      event.preventDefault();
+      this.changeChannel(event.key === 'ArrowUp' ? 1 : -1);
       return;
     }
 
@@ -108,5 +167,40 @@ export class DeeTvShell {
       : (currentIndex + direction + links.length) % links.length;
     event.preventDefault();
     links[nextIndex].focus();
+  }
+
+  private changeChannel(direction: 1 | -1): void {
+    this.scheduleService
+      .getChannels()
+      .pipe(take(1))
+      .subscribe({
+        next: (channels) => {
+          if (channels.length === 0) return;
+
+          const current = this.router.parseUrl(this.router.url).queryParams[
+            'channel'
+          ];
+          const currentChannelId =
+            typeof current === 'string' ? current : current?.[0];
+          const currentIndex = channels.findIndex(
+            (channel) => channel.id === currentChannelId
+          );
+          const nextIndex =
+            currentIndex < 0
+              ? direction === 1
+                ? 0
+                : channels.length - 1
+              : (currentIndex + direction + channels.length) % channels.length;
+
+          void this.router.navigate(['/watch'], {
+            queryParams: { channel: channels[nextIndex].id },
+            queryParamsHandling: 'merge',
+            replaceUrl: true
+          });
+        },
+        error: (error: unknown) => {
+          console.error('Unable to change Dee TV channel.', error);
+        }
+      });
   }
 }
